@@ -48,7 +48,7 @@
 /* Forms Elements */
 
 .form-elements {
-    margin-top: 10px;
+    margin-top: 30px;
 }
 
 .form-elements-button {
@@ -57,7 +57,7 @@
 
 .inline-button {
     text-align: center; 
-    padding-top: 1.9em;
+    padding-top: 10em;
 }
 
 .inline-button.mycities { 
