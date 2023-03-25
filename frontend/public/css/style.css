@@ -48,20 +48,20 @@
 /* Forms Elements */
 
 .form-elements {
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 .form-elements-button {
     margin-top: 30px;
 }
 
-.inline-button {
-    text-align: center; 
-    padding-top: 10em;
+.calculation-result {
+    font-size: x-large;
 }
 
-.inline-button.mycities { 
-    padding-top: 0.6em;
+.inline-button {
+    text-align: center; 
+    padding-top: 1em;
 }
 
 #lastUpdate {

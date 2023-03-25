@@ -20,33 +20,57 @@
             <div class="container">
                 <div class="row">
                     <div class="five columns divider"></div>
-                    <div class="two columns section-title"><h4>Home</h4></div>
+                    <div class="two columns section-title"><h4>Make a Quote</h4></div>
                     <div class="five columns divider"></div>
                 </div>
-                <div class="row">
+
+                <!-- <div class="row">
                     <div class="four columns form-elements">
-                        <label for="longitude">Select Which Employee Role</label>
-                        <input class="u-full-width" type="text" placeholder="" id="longitude">
+                        <label for="role">Select Which Employee Role</label>
+                        <select class="u-full-width" type="text" placeholder="" id="role">
+                            <option value="Employee">Employee</option>
+                            <option value="Engineer">Engineer</option>
+                            <option value="Engineer">Engineer</option>
+                            <option value="Engineer">Engineer</option>
+                        </select>
                     </div>
-                    </div>
+                    </div> -->
+
                     <div class="row">
                     <div class="five columns form-elements">
-                        <label for="latitude">Pay (in £)</label>
-                        <input class="u-full-width" type="text" placeholder="eg. £50" id="latitude">
+                        <label for="workers">How Many Workers?</label>
+                        <input class="u-full-width" type="text" placeholder="" id="workers">
+                    </div>
+                    </div>
+                    
+                    <div class="row">
+                    <div class="five columns form-elements">
+                        <label for="hours">How Many Hours?</label>
+                        <input class="u-full-width" type="number" placeholder="" id="hours">
+                    </div>
+                    </div>
+
+                    <div class="row">
+                    <div class="five columns form-elements">
+                        <label for="pay">Hourly Rate (in £)</label>
+                        <input class="u-full-width" type="text" placeholder="" id="pay">
                     </div>
                     </div>
                     <div class="row">
                     <div class="four columns form-elements inline-button" >
-                        <input class="button" id="getLocation" type="submit" value="Get Coordinates">
+                        <input class="button" id="getPay" type="submit" value="Get Pay Per Person">
                     </div>
                     </div>
                 
+                    <div class="row">
+                    <div class="four columns form-elements inline-button" >
+                        <label for="payPerPerson">Pay Per Person</label>
 
-
+                        <p id="payPerPerson" class = "calculation-result"></p>
+                    </div>
+                    </div>
             </div>
-
-
-
+            <script src="../../public/js/indexScript.js"></script>
         </main>
 
 
