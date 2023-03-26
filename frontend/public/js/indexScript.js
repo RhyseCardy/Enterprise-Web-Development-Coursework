@@ -11,6 +11,6 @@ $("#getPay").click(function(){
     personPrice = (hours * pay)
     
     
-    $("#payPerPerson").append(personPrice);
+    $("#payPerPerson").text("£"+ personPrice);
 
 });
