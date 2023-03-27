@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang = "en">
+
+<head>
+    <%- include('../partials/head')%>
+
+
+</head>
+<body>
+    <div class="table-container">
+        <div class="table-block footer-push">
+
+
+        <header>
+            <%- include('../partials/header')%>
+        </header>
+
+        <main>
+            <!-- Login -->
+        <div class="container">
+            <div class="row">
+                <div class="five columns divider"></div>
+                <div class="two columns section-title"><h4>Login</h4></div>
+                <div class="five columns divider"></div>
+            </div>
+
+
+            <form action="/login" method="POST">
+                <div class="row">
+                <div class="five columns form-elements">
+                    <label for="loginEmail">Enter Email Address</label>
+                    <input class="u-full-width" type="email" placeholder="example@mail.com" 
+                    name="logInputEmail">
+                </div>
+                </div>
+                    
+                <div class="row">
+                <div class="five columns form-elements">
+                    <label for="loginPassword">Enter Password</label>
+                    <input class="u-full-width" type="password" placeholder="•••••••••••" 
+                    name="logInputPassword">
+                </div>
+                </div>
+
+                <div class="row">
+                <div class="five columns form-elements inline-button" >
+                    <input class="button-primary" type="submit" value="Login">
+                </div>
+                </div>
+            </form> 
+
+                <!-- Registration -->
+            <div class="row" style="margin-top: 60px;">
+                <div class="five columns divider"></div>
+                <section class="two columns" style="text-align: center; margin-top: -1.6rem;">
+                    <h4>Register</h4>
+                </section>
+                <div class="five columns divider"></div>
+            </div>
+
+            
+            <form action="/createAccount" method="POST">
+                <div class="row">
+                <div class="five columns form-elements">
+                    <label for="loginEmail">Enter Email Address</label>
+                    <input class="u-full-width" type="email" placeholder="example@mail.com" 
+                    name="regInputEmail">
+                </div>
+                </div>
+
+                <div class="row">
+                <div class="five columns form-elements">
+                    <label for="loginPassword">Enter Password</label>
+                    <input class="u-full-width" type="password" placeholder="•••••••••••" 
+                    name="regInputPassword">
+                </div>
+                </div>
+
+                <div class="row">
+                <div class="five columns form-elements inline-button" >
+                    <input class="button-primary" type="submit" value="Register New User">
+                </div>
+                </div>
+
+
+            </form>
+
+            </div>
+            </div>
+            </div>
+        </main>
+
+
+
+
+
+
+
+</div>
+</div>
+</body>
+
+
+</html>
