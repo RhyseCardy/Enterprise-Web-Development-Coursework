@@ -11,8 +11,8 @@ const MongoClient = require('mongodb').MongoClient;
 
 
 //Establishing connection to mongodb
-var mongoUrl = 'mongodb://localhost:27017/';
-var db;
+let mongoUrl = 'mongodb://localhost:27017/';
+let db;
 
 MongoClient.connect(mongoUrl, function (err, database){
   if (err) throw err;
@@ -69,8 +69,8 @@ app.get('/login', function(req, res){
 //Create Account Post Request
 app.post("/createAccount", function (req, res) {  
 
-  var email = req.body.regInputEmail;
-  var password = reg.body.regInputPassword;
+  let email = req.body.regInputEmail;
+  let password = reg.body.regInputPassword;
 
   //Adds New User To The Database
   db.collection('users').findOne({email:email}, function (err, result){
@@ -108,8 +108,8 @@ app.post("/createAccount", function (req, res) {
 //Login Post Request
 app.post("/login", function (req, res){
   //Recieve Inputs From the Form
-  var email = req.body.logInputEmail;
-  var password = req.body.logInputPassword;
+  let email = req.body.logInputEmail;
+  let password = req.body.logInputPassword;
 
   //Add A New User To The Database
   db.collection("users").findOne({email:email}, function *(err, result) {
@@ -124,7 +124,7 @@ app.post("/login", function (req, res){
 
     //Check That The Password Is Correct
     if (result.password == password){
-      //Set the Variables For Session
+      //Set the letiables For Session
       req.session.loggedIn = true;
       req.session.email = email;
 
@@ -147,19 +147,70 @@ app.post("/login", function (req, res){
   });
 });
 
+app.post("/addQuote", function(req, res){
+  //Get the name of the user to create the database collection
+  let name = req.session.email
+
+  //Collect data from the form
+  let workerNumb = req.body.workerNumb
+  let hoursNumb = req.body.hoursNumb
+  let hourlyRate = req.body.hourlyRate
+  let personPay = req.body.personPay
+
+  db.createCollection(name, function (err, res){
+    if (err) {console.log("Collection Already Created")}
+  });
+
+  //Add The City To The Database
+  db.collection(name).insertOne({
+    WorkerNumb: workerNumb,
+    HoursNumb: hoursNumb,
+    HourlyRate: hourlyRate,
+    PersonPay: personPay
+  }, function (err2, result2){
+    if (err2) throw err2;
+  });
+
+  db.collection(name).find().toArray(function (err, result){
+    if (err) throw err;
+    res.render('pages/list', {
+      quotes: result,
+      isLoggedIn: req.session.loggedIn
+    })
+  });
+
+});
 
 
 //The route for the quotes page
 //WILL NEED ADDITIONAL WORK
 app.get('/quotes', function(req, res){
 
-  if (req.session.loggedIn)
+  if (req.session.loggedIn){
 
-  res.render('pages/list')
+    let name = req.session.email
+
+    db.createCollection(name, function (err, res){
+      if (err) {console.log("collection already created")}
+    });
+
+    db.collection(name).find().toArray(function (err, result){
+      if (err) throw err;
+      res.render('pages/list', {
+        quotes: result, 
+        isLoggedIn: req.session.loggedIn
+      })
+    });
+
+  } else {
+    error = true;
+    res.render('pages/login', {error:error});
+  }
+
 });
 
 //Error response page
 app.use(function (req, res, next) {
-    res.send("this page does not exist")
+    res.send("This Page Does Not Exist")
 });
 

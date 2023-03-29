@@ -1,79 +1,96 @@
 <!DOCTYPE html>
-<html lang = "en">
+<html lang="en">
+
 <head>
-    <%- include('../partials/head')%>
-
-    <script src="../../public/js/listScript.js"></script>
-
-
+	<%- include('../partials/head')%>
+	<!--Getting the crime categories-->
+	<script src="js/listScript.js"></script>
+	<!-- <script src="js/myCitiesScript.js"></script> -->
 </head>
+
 <body>
-    <div class="table-container">
-        <div class="table-block footer-push">
+	<div class="table-container"> <!-- footer fixing div 1 -->
+		<div class="table-block footer-push"> <!-- footer fixing div 2 -->
 
+			<!-- Title & Navbar -->
+			<header>
+				<%- include('../partials/header')%>
+				<script>
+					let LoginCheck = <%=isLoggedIn%>
+				if (LoginCheck == true) {
+					
+					} else {
+						alert("Please login")
+					}
+				</script>
+			</header>
 
-        <header>
-            <%- include('../partials/header')%>
-        
-            <!-- <script>
-                var isLoggedIn = <%=isLoggedIn%>
-            if (isLoggedIn == true) {
-                
-                } else {
-                    alert("Please login")
-                }
-            </script> -->
-    
-        </header>
+			<!-- Page Content -->
+			<main>
+				<div class="container">
+					<!-- Description -->
 
-        <main>
-            <div class="container">
-                <div class="row">
-                    <div class="five columns divider"></div>
-                    <div class="two columns section-title"><h4>Quote List</h4></div>
-                    <div class="five columns divider"></div>
-                </div>
+					<!-- Section Title -->
+					<div class="row">
+						<div class="four columns divider"></div>
+						<div class="four columns section-title"> <h4>List of Quotes</h4> </div>
+						<div class="four columns divider"></div>
+					</div>
 
-        
-                    <div class="row">
-                    <div class="five columns form-elements">
-                        <label for="workers">How Many Workers?</label>
-                        <input class="u-full-width" type="text" placeholder="" id="workers">
-                    </div>
-                    </div>
-                    
-                    <div class="row">
-                    <div class="five columns form-elements">
-                        <label for="hours">How Many Hours?</label>
-                        <input class="u-full-width" type="number" placeholder="" id="hours">
-                    </div>
-                    </div>
+					<!-- Table -->
+					<br>
+					<table class="u-full-width">
+						<thead>
+							<tr>
+								<th>Workers</th>
+								<th>Hours</th>
+								<th>Hourly Rate</th>
+								<th>Pay Per Person</th>
+                                <th>Total Price</th>
+							</tr>
+						</thead>
+						<tbody id="quotesTable">
+							<!-- for each city in the database add it to the table -->
+							<% quotes.forEach(function(city){ %>
+								<tr id="<%=city.CityName %>">
+									<td class="city"> <%=city.WorkerNumb %> </td>
+									<td class="longitude"> <%=city.Longitude %> </td>
+									<td class="latitude"> <%= city.Latitude %> </td>
+									<td class="crimeNo"></td>
+								</tr>
+								<% }); %>
+						</tbody>
+					</table>
 
-                    <div class="row">
-                    <div class="five columns form-elements">
-                        <label for="pay">Hourly Rate (in £)</label>
-                        <input class="u-full-width" type="number" placeholder="" id="pay">
-                    </div>
-                    </div>
-                    <div class="row">
-                    <div class="four columns form-elements inline-button" >
-                        <input class="button" id="getPay" type="submit" value="Get Pay Per Person">
-                    </div>
-                    </div>
-                
-                    <div class="row">
-                    <div class="four columns form-elements inline-button" >
-                        <label for="payPerPerson">Pay Per Person</label>
+					<!-- Add New -->
+					<form action="/addQuote" method="POST">
+						<div class="row">
+							<div class="three columns form-elements">
+								<label for="workernumb">Amount of workers</label>
+								<input class="u-full-width" type="text" step="any" placeholder="123" name="workerNumb">
+							</div>
+							<div class="three columns form-elements">
+								<label for="hoursnumb">Amount of Hours</label>
+								<input class="u-full-width" type="number" step="any" placeholder="123" name="hoursNumb">
+							</div>
+							<div class="three columns form-elements">
+								<label for="hourlyrate">Hourly Rate (in £)</label>
+								<input class="u-full-width" type="number" step="any" placeholder="£123" name="hourlyRate">
+							</div>
+                            <div class="three columns form-elements">
+								<label for="personpay">Pay Per Person</label>
+								<input class="u-full-width" type="number" step="any" placeholder="£123" name="personPay">
+							</div>
+							<div class="three columns form-elements-button inline-button mycities">
+								<input class="button-primary" id="addNew" type="submit" value="Add New">
+							</div>
+						</div>
+					</form>
+				</div>
+			</main>
 
-                        <p id="payPerPerson" class = "calculation-result"></p>
-                    </div>
-                    </div>
-            </div>
-            
-        </main>
+		</div> <!-- end footer fixing div 2 -->
 
-</div>
-</div>
 </body>
 
 
