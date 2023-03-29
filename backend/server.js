@@ -70,7 +70,7 @@ app.get('/login', function(req, res){
 app.post("/createAccount", function (req, res) {  
 
   let email = req.body.regInputEmail;
-  let password = reg.body.regInputPassword;
+  let password = req.body.regInputPassword;
 
   //Adds New User To The Database
   db.collection('users').findOne({email:email}, function (err, result){
@@ -124,7 +124,7 @@ app.post("/login", function (req, res){
 
     //Check That The Password Is Correct
     if (result.password == password){
-      //Set the letiables For Session
+      //Set the Variables For Session
       req.session.loggedIn = true;
       req.session.email = email;
 
