@@ -3,9 +3,6 @@
 
 <head>
 	<%- include('../partials/head')%>
-	<!--Getting the crime categories-->
-	<script src="js/listScript.js"></script>
-	<!-- <script src="js/myCitiesScript.js"></script> -->
 </head>
 
 <body>
@@ -15,14 +12,15 @@
 			<!-- Title & Navbar -->
 			<header>
 				<%- include('../partials/header')%>
-				<!-- <script>
-					let LoginCheck = <%=isLoggedIn%>
-				if (LoginCheck == true) {
+				<script>
+				var isLoggedIn = <%=isLoggedIn%>
+                    console.log(isLoggedIn)
+				    if (isLoggedIn == true) {
 					
 					} else {
 						alert("Please login")
 					}
-				</script> -->
+				</script>
 			</header>
 
 			<!-- Page Content -->
@@ -51,12 +49,12 @@
 						</thead>
 						<tbody id="quotesTable">
 							<!-- for each city in the database add it to the table -->
-							<% quotes.forEach(function(city){ %>
-								<tr id="<%=city.CityName %>">
-									<td class="city"> <%=city.WorkerNumb %> </td>
-									<td class="longitude"> <%=city.Longitude %> </td>
-									<td class="latitude"> <%= city.Latitude %> </td>
-									<td class="crimeNo"></td>
+							<% quotes.forEach(function(quote){ %>
+								<tr id="<%=quote.WorkerNumb %>">
+									<td class="workers"> <%=quote.WorkerNumb %> </td>
+									<td class="hours"> <%=quote.HoursNumb %> </td>
+									<td class="hourlyrate"> <%= quote.HourlyRate %> </td>
+									<td class="personpay"> <%= quote.PersonPay %> </td>
 								</tr>
 								<% }); %>
 						</tbody>

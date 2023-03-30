@@ -119,7 +119,9 @@ app.post("/login", function (req, res){
     //Check Account Already Exists
     if (!result) {
       res.redirect("/login")
+      console.log(result)
       return;
+      
     }
 
     //Check That The Password Is Correct
@@ -127,6 +129,7 @@ app.post("/login", function (req, res){
       //Set the Variables For Session
       req.session.loggedIn = true;
       req.session.email = email;
+      
 
       db.createCollection(email, function (err, res){
         if (err) {console.log("Collection Already Created")}
@@ -151,7 +154,7 @@ app.post("/addQuote", function(req, res){
   //Get the name of the user to create the database collection
   let name = req.session.email
 
-  //Collect data from the form
+  //Collect Data From The Form
   let workerNumb = req.body.workerNumb
   let hoursNumb = req.body.hoursNumb
   let hourlyRate = req.body.hourlyRate
@@ -161,7 +164,7 @@ app.post("/addQuote", function(req, res){
     if (err) {console.log("Collection Already Created")}
   });
 
-  //Add The City To The Database
+  //Add The Quote Info To The Database
   db.collection(name).insertOne({
     WorkerNumb: workerNumb,
     HoursNumb: hoursNumb,
