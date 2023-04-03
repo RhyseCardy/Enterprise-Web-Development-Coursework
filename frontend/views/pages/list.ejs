@@ -13,13 +13,17 @@
 			<header>
 				<%- include('../partials/header')%>
 				<script>
-				var isLoggedIn = <%=isLoggedIn%>
-                    console.log(isLoggedIn)
-				    if (isLoggedIn == true) {
+				// var isLoggedIn = <%=isLoggedIn%>
+                //     console.log(isLoggedIn)
+				//     if (isLoggedIn == true) {
 					
-					} else {
-						alert("Please login")
-					}
+				// 	} else {
+				// 		alert("Please login")
+				// 	}
+
+					<% if (user.loggedIn = true) { %>
+
+
 				</script>
 			</header>
 
@@ -89,6 +93,11 @@
 
 		</div> <!-- end footer fixing div 2 -->
 
+	<script>
+		<% } else { %>
+			alert("Please login")
+		<% } %>
+	</script>
 </body>
 
 

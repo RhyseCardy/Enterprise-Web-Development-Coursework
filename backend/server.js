@@ -1,20 +1,19 @@
 
-const path = require('path');
-const express = require('express');
-const session = require('express-session');
-const bodyParser = require('body-parser')
-const app = express();
-const {name} = require("ejs")
-const port = 3000
-const req = require('express/lib/request');
-const MongoClient = require('mongodb').MongoClient;
+const path = require('path'),
+      express = require('express'),
+      session = require('express-session'),
+      bodyParser = require('body-parser'),
+      app = express(),
+      {name} = require("ejs"),
+      port = 3000,
+      req = require('express/lib/request'),
+      MongoClient = require('mongodb').MongoClient;
 
 
 //Establishing connection to mongodb
-let mongoUrl = 'mongodb://localhost:27017/';
 let db;
 
-MongoClient.connect(mongoUrl, function (err, database){
+MongoClient.connect("mongodb://localhost:27017/", function (err, database){
   if (err) throw err;
 
   db = database.db("UserQuotes");
@@ -61,7 +60,6 @@ app.get('/home', function(req, res){
 
 //The route for the login page
 app.get('/login', function(req, res){
-  error = false;
   res.render('pages/login')
 });
 
@@ -108,8 +106,8 @@ app.post("/createAccount", function (req, res) {
 //Login Post Request
 app.post("/login", function (req, res){
   //Recieve Inputs From the Form
-  let email = req.body.logInputEmail;
-  let password = req.body.logInputPassword;
+  var email = req.body.logInputEmail;
+  var password = req.body.logInputPassword;
 
   //Add A New User To The Database
   db.collection("users").findOne({email:email}, function *(err, result) {
@@ -117,18 +115,24 @@ app.post("/login", function (req, res){
     if (err) throw err;
 
     //Check Account Already Exists
-    if (!result) {
-      res.redirect("/login")
-      console.log(result)
-      return;
+    // if (!result) {
+    //   res.redirect("/login")
+    //   console.log(result)
+    //   return;
       
-    }
+    // }
 
     //Check That The Password Is Correct
     if (result.password == password){
       //Set the Variables For Session
-      req.session.loggedIn = true;
-      req.session.email = email;
+
+      req.session.user = {
+        email: email,
+        loggedIn: true
+      }
+
+      // req.session.loggedIn = true;
+      // req.session.email = email;
       
 
       db.createCollection(email, function (err, res){
@@ -140,7 +144,8 @@ app.post("/login", function (req, res){
         if (err) throw err;
         res.render('pages/list', {
           quotes: result,
-          isLoggedIn: req.session.loggedIn
+          user: req.session.user
+          //isLoggedIn: req.session.loggedIn
         })
       });
     } else {
@@ -187,11 +192,11 @@ app.post("/addQuote", function(req, res){
 
 //The route for the quotes page
 //WILL NEED ADDITIONAL WORK
-app.get('/quotes', function(req, res){
+app.get('/list', function(req, res){
 
   if (req.session.loggedIn){
 
-    let name = req.session.email
+    var name = req.session.email
 
     db.createCollection(name, function (err, res){
       if (err) {console.log("collection already created")}
@@ -200,13 +205,16 @@ app.get('/quotes', function(req, res){
     db.collection(name).find().toArray(function (err, result){
       if (err) throw err;
       res.render('pages/list', {
-        quotes: result, 
+        // quotes: result,
+        user: req.session.user, //POTENTIALLY REMOVE THIS
         isLoggedIn: req.session.loggedIn
+        
       })
+      console.log(loggedIn)
     });
 
   } else {
-    error = true;
+    var error = true;
     res.render('pages/login', {error:error});
   }
 
