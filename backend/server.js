@@ -7,7 +7,8 @@ const path = require('path'),
       {name} = require("ejs"),
       port = 3000,
       req = require('express/lib/request'),
-      MongoClient = require('mongodb').MongoClient;
+      MongoClient = require('mongodb').MongoClient,
+      bcrypt = require('bcrypt');
 
 
 //Establishing connection to mongodb
@@ -82,15 +83,18 @@ app.post("/createAccount", function (req, res) {
         if (err2) throw err2;
 
         //Code To Add New User To The Database
-        db.collection('users').insertOne({
-          email:email,
-          password: password
-
-        }, function(err3, result3){
-          //Error Handler
-          if (err3) throw err3;
+        bcrypt.hash(password, 10, function(err, hashedPassword){
+            let password = hashedPassword;
+            db.collection('users').insertOne({
+              email:email,
+              password: password
+            }, function(err3, result3){
+              //Error Handler
+              if (err3) throw err3;
+            });
+          });
         });
-      });
+        
       console.log("Account Successfully Created")
     } else {
       console.log("Account Has Already Been Created")
@@ -110,48 +114,44 @@ app.post("/login", function (req, res){
   var password = req.body.logInputPassword;
 
   //Add A New User To The Database
-  db.collection("users").findOne({email:email}, function *(err, result) {
+  db.collection("users").findOne({email:email}, function (err, result) {
     //Error Handler
     if (err) throw err;
 
     //Check Account Already Exists
-    // if (!result) {
-    //   res.redirect("/login")
-    //   console.log(result)
-    //   return;
+    if (!result) {
+      res.redirect("/login")
+      console.log(result)
+      return;
       
-    // }
+    }
 
     //Check That The Password Is Correct
-    if (result.password == password){
-      //Set the Variables For Session
-
-      req.session.user = {
-        email: email,
-        loggedIn: true
+    bcrypt.compare(password, result.password, function(err, result1){
+      if(result1){ //if password correct
+        //Set the Variables For Session
+        req.session.user = {
+          email: email,
+          loggedIn: true
+        }
+        db.createCollection(email, function (err, res){
+          if (err) {console.log("Collection Already Created")}
+        });
+  
+        //Send Users To List Page After Logging In
+        db.collection(email).find().toArray(function (err, result){
+          if (err) throw err;
+          res.render('pages/list', {
+            quotes: result,
+            user: req.session.user,
+            isLoggedIn: req.session.user.loggedIn
+          })
+        });
+      } else {
+        //Redirect To The Login Page If Password Is Incorrect
+        res.redirect("/login")
       }
-
-      // req.session.loggedIn = true;
-      // req.session.email = email;
-      
-
-      db.createCollection(email, function (err, res){
-        if (err) {console.log("Collection Already Created")}
-      });
-
-      //Send Users To List Page After Logging In
-      db.collection(email).find().toArray(function (err, result){
-        if (err) throw err;
-        res.render('pages/list', {
-          quotes: result,
-          user: req.session.user
-          //isLoggedIn: req.session.loggedIn
-        })
-      });
-    } else {
-      //Redirect To The Login Page If Password Is Incorrect
-      res.redirect("/login")
-    };
+    });
   });
 });
 
@@ -181,9 +181,11 @@ app.post("/addQuote", function(req, res){
 
   db.collection(name).find().toArray(function (err, result){
     if (err) throw err;
+    console.log(req.session)
     res.render('pages/list', {
+      
       quotes: result,
-      isLoggedIn: req.session.loggedIn
+      isLoggedIn: req.session.user.loggedIn
     })
   });
 
@@ -207,7 +209,7 @@ app.get('/list', function(req, res){
       res.render('pages/list', {
         // quotes: result,
         user: req.session.user, //POTENTIALLY REMOVE THIS
-        isLoggedIn: req.session.loggedIn
+        isLoggedIn: req.session.user.loggedIn
         
       })
       console.log(loggedIn)
