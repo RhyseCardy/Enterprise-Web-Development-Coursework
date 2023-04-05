@@ -50,43 +50,15 @@
 						</thead>
 						<tbody id="quotesTable">
 							<!-- for each city in the database add it to the table -->
-							<% quotes.forEach(function(quote){ %>
-								<tr id="<%=quote.WorkerNumb %>">
-									<td class="workers"> <%=quote.WorkerNumb %> </td>
-									<td class="hours"> <%=quote.HoursNumb %> </td>
-									<td class="hourlyrate"> <%= quote.HourlyRate %> </td>
-									<td class="personpay"> <%= quote.PersonPay %> </td>
-								</tr>
-								<% }); %>
+							
+								
+							
 						</tbody>
 					</table>
-
-					<!-- Add New -->
-					<form action="/updateList" method="POST">
-						<div class="row">
-							<div class="three columns form-elements">
-								<label for="workernumb">Amount of workers</label>
-								<input class="u-full-width" type="text" step="any" placeholder="123" name="workerNumb">
-							</div>
-							<div class="three columns form-elements">
-								<label for="hoursnumb">Amount of Hours</label>
-								<input class="u-full-width" type="number" step="any" placeholder="123" name="hoursNumb">
-							</div>
-							<div class="three columns form-elements">
-								<label for="hourlyrate">Hourly Rate (in £)</label>
-								<input class="u-full-width" type="number" step="any" placeholder="£123" name="hourlyRate">
-							</div>
-                            <div class="three columns form-elements">
-								<label for="personpay">Pay Per Person</label>
-								<input class="u-full-width" type="number" step="any" placeholder="£123" name="personPay">
-							</div>
-							<div class="three columns form-elements-button inline-button mycities">
-								<input class="button-primary" id="addNew" type="submit" value="Update List">
-							</div>
-						</div>
-					</form>
 				</div>
 			</main>
+
+			<script src="../../public/js/listScript.js"></script>
 
 		</div> <!-- end footer fixing div 2 -->
 </body>

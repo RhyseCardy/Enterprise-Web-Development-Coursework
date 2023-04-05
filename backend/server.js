@@ -197,6 +197,13 @@ app.post("/makeQuote", function (req, res) {
   res.render("pages/index");
 });
 
+app.use("/getAllQuotes", async function(req, res){
+  req.session.email = "test@test.com"
+  let quoteData = await db.collection("quotes").find({createdBy: req.session.email}).toArray()
+  //JSON.stringify(quoteData)
+  res.send(quoteData)
+  console.log(quoteData)
+});
 
 
 // app.post("/addQuote", function(req, res){
@@ -237,7 +244,6 @@ app.post("/makeQuote", function (req, res) {
 
 
 //The route for the quotes page
-//WILL NEED ADDITIONAL WORK
 app.get('/list', function(req, res){
 
  
@@ -252,7 +258,7 @@ app.get('/list', function(req, res){
     db.collection(name).find().toArray(function (err, result){
       if (err) throw err;
       res.render('pages/list', {
-         quotes: result,
+        quotes: result,
         isLoggedIn: req.session.loggedIn
         
       })
