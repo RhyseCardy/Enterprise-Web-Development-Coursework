@@ -12,7 +12,7 @@ $("#getPay").click(function(){
     
     personPrice = (hours * pay)
     
-    $("#payPerPerson").text("£"+ personPrice);
+    $("#payPerPerson").text(personPrice);
 
 
     function getfudgeFactor(min, max) {
@@ -24,6 +24,23 @@ $("#getPay").click(function(){
     totalPrice = ((personPrice * workers) * fudgeFactor)
     totalPriceRounded = Math.round((totalPrice+roundToNearest)/roundToNearest) * roundToNearest
 
-    $("#priceTotal").text("£"+ totalPriceRounded);
+    $("#priceTotal").text(totalPriceRounded);
 
 });
+
+$("#makeQuoteButton").click(function(){
+    //console.log(values);
+    let quote = new Object();
+    quote.workers = parseInt($('#workers').val());
+    quote.hours = parseInt($('#hours').val());
+    quote.pay = parseInt($('#pay').val());
+    quote.payPerPerson = parseInt($('#payPerPerson').text());
+    quote.totalPrice = parseInt($('#priceTotal').text());
+    console.log(quote);
+    
+    $.post('/makeQuote',quote,function(data, status){
+        console.log(data, status)
+    });
+
+})
+    

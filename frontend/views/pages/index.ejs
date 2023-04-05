@@ -23,56 +23,66 @@
                     <div class="two columns section-title"><h4>Make a Quote</h4></div>
                     <div class="five columns divider"></div>
                 </div>
-                
-
+                <div class="row">
+                    <div class="four columns form-elements inline-button" >
+                        <input class="button-primary" id="getPay" type="submit" value="Get Pay Per Person">
+                    </div>
+                    </div>
+                <form id="makeQuote">
+                    <!-- <form action="/makeQuote" method="POST" id="makeQuote"></form> -->
                     <div class="row">
                     <div class="five columns form-elements">
                         <label for="workers">How Many Workers?</label>
-                        <input class="u-full-width" type="text" placeholder="" id="workers">
+                        <input class="u-full-width" type="text" placeholder="" id="workers" name="workers">
                     </div>
                     </div>
                     
                     <div class="row">
                     <div class="five columns form-elements">
                         <label for="hours">How Many Hours?</label>
-                        <input class="u-full-width" type="number" placeholder="" id="hours">
+                        <input class="u-full-width" type="number" placeholder="" id="hours"name="hours">
                     </div>
                     </div>
 
                     <div class="row">
                     <div class="five columns form-elements">
                         <label for="pay">Hourly Rate (in £)</label>
-                        <input class="u-full-width" type="number" placeholder="" id="pay">
+                        <input class="u-full-width" type="number" placeholder="" id="pay" name="pay">
                     </div>
                     </div>
-                    <div class="row">
-                    <div class="four columns form-elements inline-button" >
-                        <input class="button-primary" id="getPay" type="submit" value="Get Pay Per Person">
-                    </div>
-                    </div>
+                    
                 
                     <div class="row">
                     <div class="four columns form-elements inline-button" >
-                        <label for="payPerPerson">Pay Per Person</label>
+                        <label for="payPerPerson">Pay Per Person (£)</label>
 
-                        <p id="payPerPerson" class = "calculation-result"></p>
+                        <p id="payPerPerson" name="payPerPerson" class = "calculation-result"></p>
                     </div>
                     </div>
 
                     <div class="row">
                     <div class="four columns form-elements inline-button" >
-                        <label for="priceTotal">Total Price</label>
+                        <label for="priceTotal">Total Price (£)</label>
     
-                        <p id="priceTotal" class = "calculation-result"></p>
+                        <p id="priceTotal" name="priceTotal" class = "calculation-result"></p>
                     </div>
                     </div>
 
                     <div class="row">
                         <div class="four columns form-elements inline-button" style="text-align: center;">
-                            <input class="button-primary" type="submit" value="Save As Quote">
+                            <input class="button-primary" type="button" value="Save As Quote" id="makeQuoteButton">
                         </div>
                     </div>
+                </form>
+
+                <div class="row">
+                    <div class="five columns form-elements" >
+                        <p>Pay per person calculation is done using:</p>
+                        <p><i>Number_of_hours_needed x persons_hourly_rate</i></p>
+                    </div>
+                    </div>
             </div>
+
             <script src="../../public/js/indexScript.js"></script>
         </main>
 </div>

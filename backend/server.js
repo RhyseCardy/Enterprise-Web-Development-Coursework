@@ -12,7 +12,7 @@ const path = require('path'),
 
 
 //Establishing connection to mongodb
-let db;
+var db;
 
 MongoClient.connect("mongodb://localhost:27017/", function (err, database){
   if (err) throw err;
@@ -21,6 +21,10 @@ MongoClient.connect("mongodb://localhost:27017/", function (err, database){
 
   db.createCollection("users", function (err2, res){
     if (err2) {console.log("collection already created")}
+  })
+
+  db.createCollection("quotes", function (err3, res){
+    if (err3) {console.log("collection already created")}
   })
 
   app.listen(port, () => {
@@ -48,7 +52,6 @@ app.engine('ejs', require('ejs').__express);
 //Setup the session
 app.use(session({secret: 'QuoteCreatorSecret', resave: false, saveUninitialized: false}));
 
-
 //The route for the home page (default)
 app.get('/', function(req, res){
   res.render('pages/index')
@@ -61,6 +64,7 @@ app.get('/home', function(req, res){
 
 //The route for the login page
 app.get('/login', function(req, res){
+  error = false;
   res.render('pages/login')
 });
 
@@ -130,10 +134,9 @@ app.post("/login", function (req, res){
     bcrypt.compare(password, result.password, function(err, result1){
       if(result1){ //if password correct
         //Set the Variables For Session
-        req.session.user = {
-          email: email,
-          loggedIn: true
-        }
+        req.session.loggedIn = true;
+        req.session.email = email;
+          
         db.createCollection(email, function (err, res){
           if (err) {console.log("Collection Already Created")}
         });
@@ -143,8 +146,7 @@ app.post("/login", function (req, res){
           if (err) throw err;
           res.render('pages/list', {
             quotes: result,
-            user: req.session.user,
-            isLoggedIn: req.session.user.loggedIn
+            isLoggedIn: req.session.loggedIn
           })
         });
       } else {
@@ -155,49 +157,92 @@ app.post("/login", function (req, res){
   });
 });
 
-app.post("/addQuote", function(req, res){
-  //Get the name of the user to create the database collection
-  let name = req.session.email
+app.post("/makeQuote", function (req, res) {  
+  console.log(req.body)
+  let workers = req.body.workers;
+  let hours = req.body.hours;
+  let pay = req.body.pay;
+  let payPerPerson = req.body.payPerPerson;
+  let priceTotal = req.body.totalPrice;
+  let createdBy = req.session.email
 
-  //Collect Data From The Form
-  let workerNumb = req.body.workerNumb
-  let hoursNumb = req.body.hoursNumb
-  let hourlyRate = req.body.hourlyRate
-  let personPay = req.body.personPay
-
-  db.createCollection(name, function (err, res){
-    if (err) {console.log("Collection Already Created")}
-  });
-
-  //Add The Quote Info To The Database
-  db.collection(name).insertOne({
-    WorkerNumb: workerNumb,
-    HoursNumb: hoursNumb,
-    HourlyRate: hourlyRate,
-    PersonPay: personPay
-  }, function (err2, result2){
-    if (err2) throw err2;
-  });
-
-  db.collection(name).find().toArray(function (err, result){
+  //Adds New Quote To The Database
+  db.collection('quotes').findOne({workers:workers}, function (err, result){
+    //Error Handler
     if (err) throw err;
-    console.log(req.session)
-    res.render('pages/list', {
-      
-      quotes: result,
-      isLoggedIn: req.session.user.loggedIn
-    })
-  });
 
+    //Check If Quote Already Exists
+      db.collection('quotes').count(function(err2, result2){
+        //Error Handler
+        if (err2) throw err2;
+
+        //Code To Add New Quote To The Database
+            db.collection('quotes').insertOne({
+              workers: workers,
+              hours: hours,
+              pay: pay,
+              payPerPerson: payPerPerson,
+              priceTotal: priceTotal,
+              createdBy: createdBy
+            }, function(err3, result3){
+              //Error Handler
+              if (err3) throw err3;
+            });
+          
+        });
+        
+      console.log("Quote Successfully Added")
+  });
+  //Go Back To Login Page Afterwards
+  res.render("pages/index");
 });
+
+
+
+// app.post("/addQuote", function(req, res){
+//   //Get the name of the user to create the database collection
+//   var name = req.session.email
+
+//   //Collect Data From The Form
+//   let workerNumb = req.body.workerNumb
+//   let hoursNumb = req.body.hoursNumb
+//   let hourlyRate = req.body.hourlyRate
+//   let personPay = req.body.personPay
+
+//   db.createCollection(name, function (err, res){
+//     if (err) {console.log("Collection Already Created")}
+//   });
+
+//   //Add The Quote Info To The Database
+//   db.collection(name).insertOne({
+//     WorkerNumb: workerNumb,
+//     HoursNumb: hoursNumb,
+//     HourlyRate: hourlyRate,
+//     PersonPay: personPay
+//   }, function (err2, result2){
+//     if (err2) throw err2;
+//   });
+
+//   db.collection(name).find().toArray(function (err, result){
+//     if (err) throw err;
+//     console.log(req.session)
+//     res.render('pages/list', {
+      
+//       quotes: result,
+//       isLoggedIn: req.session.loggedIn
+//     })
+//   });
+
+// });
 
 
 //The route for the quotes page
 //WILL NEED ADDITIONAL WORK
 app.get('/list', function(req, res){
 
+ 
   if (req.session.loggedIn){
-
+    console.log(req.session.loggedIn)
     var name = req.session.email
 
     db.createCollection(name, function (err, res){
@@ -207,12 +252,10 @@ app.get('/list', function(req, res){
     db.collection(name).find().toArray(function (err, result){
       if (err) throw err;
       res.render('pages/list', {
-        // quotes: result,
-        user: req.session.user, //POTENTIALLY REMOVE THIS
-        isLoggedIn: req.session.user.loggedIn
+         quotes: result,
+        isLoggedIn: req.session.loggedIn
         
       })
-      console.log(loggedIn)
     });
 
   } else {
