@@ -1,4 +1,4 @@
-
+// Packages and Variables
 const path = require('path'),
       express = require('express'),
       session = require('express-session'),
@@ -14,19 +14,24 @@ const path = require('path'),
 //Establishing connection to mongodb
 var db;
 
+// Setup Mongo connection
 MongoClient.connect("mongodb://localhost:27017/", function (err, database){
   if (err) throw err;
 
+  //Database Name
   db = database.db("UserQuotes");
 
+  // Colleection to store user information
   db.createCollection("users", function (err2, res){
     if (err2) {console.log("collection already created")}
   })
 
+  // Collection to store quote information
   db.createCollection("quotes", function (err3, res){
     if (err3) {console.log("collection already created")}
   })
 
+  // Allow website to run on the chosen port
   app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
   });
@@ -34,9 +39,9 @@ MongoClient.connect("mongodb://localhost:27017/", function (err, database){
 });
 
 
-
 //Create static folder
 app.use(express.static(path.join(__dirname, '/../frontend')));
+
 //setting up body parser
 app.use(bodyParser.urlencoded({
     extended: true
@@ -72,11 +77,13 @@ app.get('/login', function(req, res){
 //Create Account Post Request
 app.post("/createAccount", function (req, res) {  
 
+  // Fill variables with user inputted page elements
   let email = req.body.regInputEmail;
   let password = req.body.regInputPassword;
 
   //Adds New User To The Database
   db.collection('users').findOne({email:email}, function (err, result){
+    
     //Error Handler
     if (err) throw err;
 
@@ -86,7 +93,7 @@ app.post("/createAccount", function (req, res) {
         //Error Handler
         if (err2) throw err2;
 
-        //Code To Add New User To The Database
+        //Code To Add New User and login information To The Database using email and hashed password
         bcrypt.hash(password, 10, function(err, hashedPassword){
             let password = hashedPassword;
             db.collection('users').insertOne({
@@ -108,7 +115,6 @@ app.post("/createAccount", function (req, res) {
   //Go Back To Login Page Afterwards
   res.redirect("/login");
 });
-
 
 
 //Login Post Request
@@ -157,6 +163,7 @@ app.post("/login", function (req, res){
   });
 });
 
+// Make Quote function that collected inputted quote info and adds it to database to be recieved in the 'list' page
 app.post("/makeQuote", function (req, res) {  
   console.log(req.body)
   let workers = req.body.workers;
@@ -197,6 +204,7 @@ app.post("/makeQuote", function (req, res) {
   res.render("pages/index");
 });
 
+// Function to recieve the quote info that can then be used to fill dynamic table in 'list' page 
 app.use("/getAllQuotes", async function(req, res){
   let quoteData = await db.collection("quotes").find({createdBy: req.session.email}).toArray()
   //JSON.stringify(quoteData)
@@ -204,47 +212,11 @@ app.use("/getAllQuotes", async function(req, res){
   console.log(quoteData)
 });
 
+// Function to delete all the quotes from the Mongo database when the corresponding button is clicked
 app.use("/deleteAllQuotes", async function(req, res){
   let quoteData = await db.collection("quotes").deleteMany({createdBy: req.session.email});
   console.log('Quotes Deleted by' + req.session.email)
 });
-
-
-// app.post("/addQuote", function(req, res){
-//   //Get the name of the user to create the database collection
-//   var name = req.session.email
-
-//   //Collect Data From The Form
-//   let workerNumb = req.body.workerNumb
-//   let hoursNumb = req.body.hoursNumb
-//   let hourlyRate = req.body.hourlyRate
-//   let personPay = req.body.personPay
-
-//   db.createCollection(name, function (err, res){
-//     if (err) {console.log("Collection Already Created")}
-//   });
-
-//   //Add The Quote Info To The Database
-//   db.collection(name).insertOne({
-//     WorkerNumb: workerNumb,
-//     HoursNumb: hoursNumb,
-//     HourlyRate: hourlyRate,
-//     PersonPay: personPay
-//   }, function (err2, result2){
-//     if (err2) throw err2;
-//   });
-
-//   db.collection(name).find().toArray(function (err, result){
-//     if (err) throw err;
-//     console.log(req.session)
-//     res.render('pages/list', {
-      
-//       quotes: result,
-//       isLoggedIn: req.session.loggedIn
-//     })
-//   });
-
-// });
 
 
 //The route for the quotes page
@@ -258,6 +230,9 @@ app.get('/list', function(req, res){
       if (err) {console.log("collection already created")}
     });
 
+    // Code to detect if the user is logged in. If so, user is sent to correct page,
+    // if not, user is sent to login page to try again. Login page is also rendered
+    // as default if not logged in
     db.collection(name).find().toArray(function (err, result){
       if (err) throw err;
       res.render('pages/list', {
@@ -276,23 +251,26 @@ app.get('/list', function(req, res){
 
 //Route For The Edit Quote Page
 app.get("/edit", function(req, res){
+  
   if (req.session.loggedIn){
     req.session.email = req.session.email;
     res.render('pages/edit', {
       email: req.session.email,
       isLoggedIn: req.session.loggedIn
     });
+
   } else {
     error = true;
     res.render('pages/login', {error:error});
   }
 });
 
+//Starting place for the update quote function, unfinished
 app.post("/updateQuote", function(req, res){
 
 })
 
-//Error response page
+//Error response page for when a page cannot be found
 app.use(function (req, res, next) {
     res.send("This Page Does Not Exist")
 });
