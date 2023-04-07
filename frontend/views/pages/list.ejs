@@ -46,15 +46,28 @@
 								<th>Hourly Rate</th>
 								<th>Pay Per Person</th>
                                 <th>Total Price</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody id="quotesTable">
-							<!-- for each city in the database add it to the table -->
+							<!-- This table is empty because in the linked javascript, the table
+							is dynamically built so that each quote that is added to the table can
+							be implemented through a looping calculation -->
 							
 								
 							
 						</tbody>
 					</table>
+					<form action="/edit">
+                        <div class="twelve columns form-elements" style="text-align: center;">
+                            <input class="button-primary" type="submit" value="Edit Quotes">
+                        </div>
+                    </form>
+
+					<div class="twelve columns form-elements" style="text-align: center;">
+					<button class="button-primary" onclick="DeleteTable()">Delete Table</button>
+				</div>
+
 				</div>
 			</main>
 

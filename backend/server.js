@@ -198,11 +198,15 @@ app.post("/makeQuote", function (req, res) {
 });
 
 app.use("/getAllQuotes", async function(req, res){
-  req.session.email = "test@test.com"
   let quoteData = await db.collection("quotes").find({createdBy: req.session.email}).toArray()
   //JSON.stringify(quoteData)
   res.send(quoteData)
   console.log(quoteData)
+});
+
+app.use("/deleteAllQuotes", async function(req, res){
+  let quoteData = await db.collection("quotes").deleteMany({createdBy: req.session.email});
+  console.log('Quotes Deleted by' + req.session.email)
 });
 
 
@@ -246,7 +250,6 @@ app.use("/getAllQuotes", async function(req, res){
 //The route for the quotes page
 app.get('/list', function(req, res){
 
- 
   if (req.session.loggedIn){
     console.log(req.session.loggedIn)
     var name = req.session.email
@@ -270,6 +273,24 @@ app.get('/list', function(req, res){
   }
 
 });
+
+//Route For The Edit Quote Page
+app.get("/edit", function(req, res){
+  if (req.session.loggedIn){
+    req.session.email = req.session.email;
+    res.render('pages/edit', {
+      email: req.session.email,
+      isLoggedIn: req.session.loggedIn
+    });
+  } else {
+    error = true;
+    res.render('pages/login', {error:error});
+  }
+});
+
+app.post("/updateQuote", function(req, res){
+
+})
 
 //Error response page
 app.use(function (req, res, next) {

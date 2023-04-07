@@ -27,11 +27,29 @@ async function getQuote(){
         quoteInfo.append('<td>' + pay + '</td>')
         quoteInfo.append('<td>' + payPerPerson + '</td>')
         quoteInfo.append('<td>' + priceTotal + '</td>')
+        //quoteInfo.append('<td><button onclick = "DeleteRow()">Delete Row</button></td>')
         
         quoteTable.append(quoteInfo)
     }
     
 }
+
+function DeleteTable(){
+    $('#quotesTable').remove();
+    $.ajax({
+        type: "GET",
+        url: "http://localhost:3000/deleteAllQuotes",
+        success: function (result){ alert("success"); },
+        error: function (result) { alert("no success"); }
+      })
+
+    alert("quotes deleted")
+}
+
+// function DeleteRow(){
+//     $('')
+// }
+
 
 /* "<tr id='quoteInfo'>
             <td id='workers'> JSONQuote[i].workers </td>
