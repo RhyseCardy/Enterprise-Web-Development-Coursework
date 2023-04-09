@@ -46,16 +46,26 @@ To get the script ready to run, type:
 Now to get the Mongo database working.
 
 Open a second terminal and and run:
+
 **sudo docker exec -it (container name) bash**
+
 This should hopefully connect the terminal to the correct container that should hold the location of the connected GitHub files and the location of "MongoDatabase" that was created when the scriopt was run. test this using **ls.** 
+
 **If this didnt work, then just run commands to navigate to where the "MongoDatabase" file is located.**
+
 Then, type:
+
 **mongod --dbpath . (OR type the location of the mongo database instead of the ".")**
+
 And this should hopefully run the Mongo database. **KEEP THIS TERMINAL OPEN.**
 
 Click back to the first terminal that was used to run the script, and navigate to the location of "server.js" and "package.json", this should be the **/Enterprise-Web-Development-Coursework#/backend** location.
 Once in the correct file location, finally type:
+
 **npm run server**
+
 To run the server proper, click on a browser and navigate to:
+
 **http://localhost:3000/**
+
 To see if everything worked.
